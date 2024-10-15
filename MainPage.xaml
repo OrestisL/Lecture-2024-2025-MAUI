@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NTUA_Notes.MainPage"
+             BackgroundColor="{AppThemeBinding Dark= Black, Light= White}">
+
+    <Grid
+        x:Name="ApplicationGrid"
+        ColumnDefinitions="*"
+        RowDefinitions="55,*,150"
+        RowSpacing="10">
+        <Grid
+            x:Name="HeaderGrid"
+            RowDefinitions="55"
+            ColumnDefinitions="250,*,60,60"
+            RowSpacing="5"
+            Grid.Row="0">
+            <Label
+            x:Name="ApplicationLabel"
+            Text="Notes"
+            FontSize="32"
+            FontAttributes="Bold"
+            Padding="10"
+            Grid.Row="0"></Label>
+        </Grid>
+        <ScrollView
+            Padding="20"
+            VerticalScrollBarVisibility="Never"
+            Grid.Row="1"
+            Grid.RowSpan="2">
+            <VerticalStackLayout
+                x:Name="NotesStackLayout"
+                Padding="5"
+                Spacing="5">
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid
+            x:Name="FooterGrid"
+            RowDefinitions="100"
+            ColumnDefinitions="*,*,100"
+            Grid.Row="2"
+            Padding="20"
+            >
+            <Button
+                x:Name="AddNoteButton"
+                Grid.Column="2"
+                Text="Add"
+                Clicked="AddNoteButton_Clicked"
+                CornerRadius="50"
+                ></Button>
+        </Grid>
+    </Grid>
+</ContentPage>
