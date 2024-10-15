@@ -41,8 +41,8 @@ public partial class FullNotePage : ContentPage
             ColumnDefinitions = 
 			[
 				new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
-				new ColumnDefinition(new GridLength(60, GridUnitType.Absolute)),
-				new ColumnDefinition(new GridLength(60, GridUnitType.Absolute)),
+				new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)),
+				new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)),
 			],
 			ColumnSpacing = 5
         };
@@ -52,7 +52,8 @@ public partial class FullNotePage : ContentPage
 			Placeholder = "Header",
             FontSize = 20,
 			FontAttributes = FontAttributes.Bold,
-			IsReadOnly = !string.IsNullOrWhiteSpace(_viewModel.Header),
+            Background = Colors.Transparent,
+            IsReadOnly = !string.IsNullOrWhiteSpace(_viewModel.Header),
 			Text = _viewModel.Header
 		};
 		_header.SetAppThemeColor(Entry.TextColorProperty, AppData.TextColorLightTheme, AppData.TextColorDarkTheme);
@@ -90,8 +91,10 @@ public partial class FullNotePage : ContentPage
 		{
 			FontSize = 16,
 			Placeholder = "Body",
+			Background = Colors.Transparent,
 			IsReadOnly = !string.IsNullOrWhiteSpace( _viewModel.Body),
-			Text = _viewModel.Body
+			Text = _viewModel.Body,
+			AutoSize = EditorAutoSizeOption.TextChanges
 		};
 		_body.SetAppThemeColor(Editor.TextColorProperty, AppData.TextColorLightTheme, AppData.TextColorDarkTheme);
 		_body.TextChanged += Body_TextChanged;

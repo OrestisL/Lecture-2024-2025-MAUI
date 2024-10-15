@@ -50,9 +50,8 @@ public class NoteView : ContentView
             ],
             RowSpacing = 5,
             Padding = 5,
-            BackgroundColor = Colors.Black,
+            BackgroundColor = Colors.Transparent,
         };
-        grid.SetAppThemeColor(BackgroundColorProperty, AppData.NoteBGColorLightTheme, AppData.NoteBGColorDarkTheme);
 
         grid.Add(_header, 0, 0);
         grid.Add(_body, 0, 1);
@@ -73,7 +72,37 @@ public class NoteView : ContentView
         tapGestureRecognizer.Tapped += OnNoteTapped;
         grid.GestureRecognizers.Add(tapGestureRecognizer);
 
-        Content = noteView;
+        SwipeItem swipeDelete = new SwipeItem()
+        {
+            Text = "Delete",
+            BackgroundColor = Colors.LightPink,        
+        };
+
+        swipeDelete.SetAppTheme(SwipeItem.IconImageSourceProperty, "deletelight.png", "deletedark.png");
+        swipeDelete.Invoked += SwipeDelete_Invoked;
+
+        SwipeView swipeView = new SwipeView()
+        {
+            LeftItems = [swipeDelete],
+            Content = noteView,
+        };
+
+        Border swipeBorder = new Border()
+        {
+            StrokeShape = new RoundRectangle
+            {
+                CornerRadius = new CornerRadius(8, 0, 8, 0)
+            },
+            Content = swipeView,
+        };
+
+        Content = swipeBorder;
+    }
+
+    private void SwipeDelete_Invoked(object? sender, EventArgs e)
+    {
+        _viewModel.ToDelete = true;
+        MainPage.Instance.UpdateNotes();
     }
 
     public void UpdateView()

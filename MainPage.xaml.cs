@@ -6,10 +6,11 @@ namespace NTUA_Notes;
 public partial class MainPage : ContentPage
 {
     int count = 0;
-
+    public static MainPage Instance { get ; private set; }
     public MainPage()
     {
         InitializeComponent();
+        Instance = this;
     }
 
     private void AddNoteButton_Clicked(object sender, EventArgs e)
@@ -30,6 +31,11 @@ public partial class MainPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        UpdateNotes();
+    }
+
+    public void UpdateNotes() 
+    {
         foreach (IView note in NotesStackLayout.Children)
         {
             NoteView view = note as NoteView;
