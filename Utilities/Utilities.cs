@@ -4,29 +4,44 @@ namespace Lecture_2024_2025_Notes.Utilities;
 
 public static class Utilities
 {
-    private static string _savePath = "";
-    public static string SavePath
+    private static string _filePath;
+    public static string FilePath
     {
         get
         {
-            return ComputeSavePath();
+            if (string.IsNullOrEmpty(_filePath))
+            {
+#if WINDOWS
+                _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "AppData", "LocalLow", "TUA_Notes.Data");
+#elif ANDROID
+                _filePath = Path.Combine(FileSystem.AppDataDirectory, "ntuanotesdata");
+#endif
+                if (!Directory.Exists(_filePath))
+                {
+                    Directory.CreateDirectory(_filePath);
+                }
+            }
+#if DEBUG
+            Console.WriteLine(_filePath);
+#endif
+            return _filePath;
         }
+
+        private set { _filePath = value; }
     }
-    private static string ComputeSavePath()
+
+    public static string SaveDataPath
     {
-        if (string.IsNullOrWhiteSpace(_savePath))
+        get
         {
-            _savePath =
-                Path.Combine(
-                    Environment.GetFolderPath(
-                        Environment.SpecialFolder.UserProfile),
-                "AppData", "LocalLow", "CLI_NTUA_2024.Data");
-
-            if (!Directory.Exists(_savePath))
-                Directory.CreateDirectory(_savePath);
+            string path = Path.Combine(FilePath, "SavedData");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
         }
-
-        return _savePath;
     }
     public static bool SaveDataToJson(string fileName, object data, bool overwriteIfExists = true)
     {
@@ -35,7 +50,7 @@ public static class Utilities
         if (string.IsNullOrWhiteSpace(fileName))
             return result;
 
-        string filePath = Path.Combine(SavePath, fileName);
+        string filePath = Path.Combine(SaveDataPath, fileName);
 
         if (!overwriteIfExists && File.Exists(filePath))
             return false;
@@ -59,7 +74,7 @@ public static class Utilities
         if (string.IsNullOrWhiteSpace(fileName))
             return false;
 
-        string filePath = Path.Combine(SavePath, fileName);
+        string filePath = Path.Combine(SaveDataPath, fileName);
         if (!File.Exists(filePath))
             return false;
 

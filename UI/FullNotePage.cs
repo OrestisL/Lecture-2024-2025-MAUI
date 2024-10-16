@@ -151,7 +151,7 @@ public partial class FullNotePage : ContentPage
 
     protected override bool OnBackButtonPressed()
     {
-		Guid guid = Guid.NewGuid();
+		Guid guid = Guid.Empty;
 		string filename;
 
         if (AppData.CurrentNoteModel.Id != guid)

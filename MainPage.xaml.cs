@@ -1,4 +1,5 @@
-﻿using NTUA_Notes.Models;
+﻿using Lecture_2024_2025_Notes.Utilities;
+using NTUA_Notes.Models;
 using NTUA_Notes.Source;
 using NTUA_Notes.UI;
 
@@ -7,13 +8,21 @@ namespace NTUA_Notes;
 public partial class MainPage : ContentPage
 {
     int count = 0;
-    public static MainPage Instance { get ; private set; }
     public MainPage()
     {
         InitializeComponent();
-        Instance = this;
 
         NoteView.OnNoteRemoved += RemoveNote;
+
+        DirectoryInfo directoryInfo = new DirectoryInfo(Utilities.SaveDataPath);
+        FileInfo[] fileInfos = directoryInfo.GetFiles().OrderByDescending(file => file.CreationTime).ToArray();
+        foreach (FileInfo file in fileInfos)
+        {
+            string fileName = file.Name;
+            Utilities.LoadDataFromJson<NoteViewModel>(fileName, out NoteViewModel noteViewModel);
+            NoteView noteView = new(noteViewModel);
+            NotesStackLayout.Children.Add(noteView);
+        }
     }
 
     private async void AddNoteButton_Clicked(object sender, EventArgs e)
