@@ -1,3 +1,6 @@
+using AndroidX.ConstraintLayout.Core.Motion.Utils;
+using AndroidX.ConstraintLayout.Core.Widgets;
+using Lecture_2024_2025_Notes.Utilities;
 using NTUA_Notes.Models;
 using NTUA_Notes.Source;
 
@@ -108,6 +111,8 @@ public partial class FullNotePage : ContentPage
 
         mainGrid.Add(bodyScroll, 0, 2);
 
+		_isEditMode = AppData.CurrentNoteModel.Id == Guid.Empty;
+
 		Content = mainGrid;
 	}
 
@@ -143,4 +148,29 @@ public partial class FullNotePage : ContentPage
 		_header.IsReadOnly = !_isEditMode;
 		_body.IsReadOnly = !_isEditMode;
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+		Guid guid = Guid.NewGuid();
+		string filename;
+
+        if (AppData.CurrentNoteModel.Id != guid)
+		{
+			if (string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Header) &
+				string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Body))
+                return base.OnBackButtonPressed();
+
+            //file doesnt exist
+            AppData.CurrentNoteModel.Id = guid;
+			filename = guid.ToString();
+			Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
+		}
+		else
+		{
+			filename = AppData.CurrentNoteModel.Id.ToString();
+            Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
+        }
+        return base.OnBackButtonPressed();
+    }
+
 }
