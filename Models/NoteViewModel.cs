@@ -10,7 +10,6 @@ public class NoteViewModel
     public bool IsDirty;
     [JsonIgnore]
     public bool ToDelete;
-
     public void UpdateValues(string header = "", string body = "", string date = "")
     {
         Header = header;

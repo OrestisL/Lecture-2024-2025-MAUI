@@ -61,6 +61,7 @@
 	  <None Remove="Resources\Images\deletelight.png" />
 	  <None Remove="Resources\Images\editdark.png" />
 	  <None Remove="Resources\Images\editlight.png" />
+	  <None Remove="Resources\Images\savelight.png" />
 	</ItemGroup>
 
 	<ItemGroup>

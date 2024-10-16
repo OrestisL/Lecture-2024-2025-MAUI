@@ -8,21 +8,16 @@ namespace NTUA_Notes;
 public partial class MainPage : ContentPage
 {
     int count = 0;
+    public static Action<NoteViewModel> OnNoteModelSaved = delegate { };
     public MainPage()
     {
         InitializeComponent();
 
-        NoteView.OnNoteRemoved += RemoveNote;
+        InitializeNoteViews();
 
-        DirectoryInfo directoryInfo = new DirectoryInfo(Utilities.SaveDataPath);
-        FileInfo[] fileInfos = directoryInfo.GetFiles().OrderByDescending(file => file.CreationTime).ToArray();
-        foreach (FileInfo file in fileInfos)
-        {
-            string fileName = file.Name;
-            Utilities.LoadDataFromJson<NoteViewModel>(fileName, out NoteViewModel noteViewModel);
-            NoteView noteView = new(noteViewModel);
-            NotesStackLayout.Children.Add(noteView);
-        }
+        NoteView.OnNoteRemoved += DeleteNoteView;
+
+        OnNoteModelSaved += AddNewNote;
     }
 
     private async void AddNoteButton_Clicked(object sender, EventArgs e)
@@ -47,8 +42,7 @@ public partial class MainPage : ContentPage
 
             if (view.ViewModel.ToDelete)
             {
-                NotesStackLayout.Children.Remove(view);
-                //delete related file
+                DeleteNoteView(view);
                 break;
             }
             if (view.ViewModel.IsDirty)
@@ -61,8 +55,37 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void RemoveNote(NoteView note)
+    private void AddNewNote(NoteViewModel noteViewModel) 
     {
-        NotesStackLayout.Children.Remove(note);
+        NoteView note = new NoteView(noteViewModel);
+        NotesStackLayout.Children.Insert(0, note);
+    }
+
+    private void InitializeNoteViews() 
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(Utilities.SaveDataPath);
+        FileInfo[] fileInfos = directoryInfo.GetFiles().OrderByDescending(file => file.CreationTime).ToArray();
+        foreach (FileInfo file in fileInfos)
+        {
+            string fileName = file.Name;
+            Utilities.LoadDataFromJson<NoteViewModel>(fileName, out NoteViewModel noteViewModel);
+            NoteView noteView = new(noteViewModel);
+            NotesStackLayout.Children.Add(noteView);
+        }
+    }
+
+    private void DeleteNoteView(NoteView view) 
+    {
+        NotesStackLayout.Children.Remove(view);
+        DirectoryInfo directoryInfo = new DirectoryInfo(Utilities.SaveDataPath);
+        FileInfo[] fileInfos = directoryInfo.GetFiles().OrderByDescending(file => file.CreationTime).ToArray();
+        foreach (FileInfo file in fileInfos)
+        {
+            if (file.Name != view.ViewModel.Id.ToString())
+                continue;
+
+            File.Delete(file.FullName);
+            return;
+        }
     }
 }

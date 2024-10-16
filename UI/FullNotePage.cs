@@ -1,8 +1,7 @@
-using AndroidX.ConstraintLayout.Core.Motion.Utils;
-using AndroidX.ConstraintLayout.Core.Widgets;
 using Lecture_2024_2025_Notes.Utilities;
 using NTUA_Notes.Models;
 using NTUA_Notes.Source;
+using System.Windows.Input;
 
 namespace NTUA_Notes.UI;
 
@@ -18,7 +17,7 @@ public partial class FullNotePage : ContentPage
 	public FullNotePage()
 	{
 		_viewModel = AppData.CurrentNoteModel;
-
+		Title = "Note";
 		//Main page grid, will hold:
 		//First row: Header + edit + delete buttons
 		//Second row: date
@@ -44,6 +43,7 @@ public partial class FullNotePage : ContentPage
             ColumnDefinitions = 
 			[
 				new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+				new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)),
 				new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)),
 				new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)),
 			],
@@ -76,9 +76,17 @@ public partial class FullNotePage : ContentPage
 		deleteButton.SetAppTheme(Button.ImageSourceProperty, "deletelight.png", "deletedark.png");
         deleteButton.Clicked += DeleteButton_Clicked;
 
+		Button saveButton = new Button()
+		{
+			BackgroundColor = Colors.Transparent,
+		};
+		saveButton.SetAppTheme(Button.ImageSourceProperty, "savelight.png", "savedark.png");
+		saveButton.Clicked += SaveNote;
+
 		firstRow.Add(_header, 0, 0);
 		firstRow.Add(editButton, 1, 0);
 		firstRow.Add(deleteButton, 2, 0);
+		firstRow.Add(saveButton, 3, 0);
 
 		mainGrid.Add(firstRow, 0, 0);
 
@@ -149,28 +157,32 @@ public partial class FullNotePage : ContentPage
 		_body.IsReadOnly = !_isEditMode;
     }
 
-    protected override bool OnBackButtonPressed()
+	
+    private async void SaveNote(object? sender, EventArgs e)
     {
-		Guid guid = Guid.Empty;
-		string filename;
+        Guid guid = Guid.Empty;
+        string filename;
 
-        if (AppData.CurrentNoteModel.Id != guid)
-		{
+        if (AppData.CurrentNoteModel.Id == Guid.Empty)
+        {
 			if (string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Header) &
 				string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Body))
-                return base.OnBackButtonPressed();
+				return;
 
             //file doesnt exist
+            guid = Guid.NewGuid();
             AppData.CurrentNoteModel.Id = guid;
-			filename = guid.ToString();
-			Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
-		}
-		else
-		{
-			filename = AppData.CurrentNoteModel.Id.ToString();
+            filename = guid.ToString();
+            Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
+            MainPage.OnNoteModelSaved.Invoke(AppData.CurrentNoteModel);
+        }
+        else
+        {
+            filename = AppData.CurrentNoteModel.Id.ToString();
             Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
         }
-        return base.OnBackButtonPressed();
+
+		await Shell.Current.GoToAsync("..");
     }
 
 }
