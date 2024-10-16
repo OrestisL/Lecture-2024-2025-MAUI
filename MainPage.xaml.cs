@@ -11,6 +11,8 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
         Instance = this;
+
+        NoteView.OnNoteRemoved += RemoveNote;
     }
 
     private void AddNoteButton_Clicked(object sender, EventArgs e)
@@ -56,5 +58,10 @@ public partial class MainPage : ContentPage
                 break;
             }
         }
+    }
+
+    private void RemoveNote(NoteView note)
+    {
+        NotesStackLayout.Children.Remove(note);
     }
 }

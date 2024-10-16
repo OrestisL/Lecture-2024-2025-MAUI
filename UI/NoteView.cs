@@ -13,6 +13,8 @@ public class NoteView : ContentView
 
     public NoteViewModel ViewModel => _viewModel;
 
+    public static Action<NoteView> OnNoteRemoved = delegate { };
+
     public NoteView(NoteViewModel model)
     {
         _viewModel = model;
@@ -91,7 +93,7 @@ public class NoteView : ContentView
         {
             StrokeShape = new RoundRectangle
             {
-                CornerRadius = new CornerRadius(8, 0, 8, 0)
+                CornerRadius = new CornerRadius(8)
             },
             Content = swipeView,
         };
@@ -102,7 +104,7 @@ public class NoteView : ContentView
     private void SwipeDelete_Invoked(object? sender, EventArgs e)
     {
         _viewModel.ToDelete = true;
-        MainPage.Instance.UpdateNotes();
+        OnNoteRemoved?.Invoke(this);
     }
 
     public void UpdateView()
