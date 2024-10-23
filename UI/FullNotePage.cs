@@ -81,7 +81,7 @@ public partial class FullNotePage : ContentPage
 			BackgroundColor = Colors.Transparent,
 		};
 		saveButton.SetAppTheme(Button.ImageSourceProperty, "savelight.png", "savedark.png");
-		saveButton.Clicked += SaveNote;
+		saveButton.Clicked += (s, e) => SaveNote();
 
 		firstRow.Add(_header, 0, 0);
 		firstRow.Add(editButton, 1, 0);
@@ -121,6 +121,13 @@ public partial class FullNotePage : ContentPage
 
 		_isEditMode = AppData.CurrentNoteModel.Id == Guid.Empty;
 
+		//BackButtonBehavior backButtonBehavior = new BackButtonBehavior()
+		//{
+		//	Command = new Command(() => OnBackButtonPressed()),
+		//};
+
+		//Shell.SetBackButtonBehavior(this, backButtonBehavior);
+
 		Content = mainGrid;
 	}
 
@@ -158,7 +165,7 @@ public partial class FullNotePage : ContentPage
     }
 
 	
-    private async void SaveNote(object? sender, EventArgs e)
+    private bool SaveNote()
     {
         Guid guid = Guid.Empty;
         string filename;
@@ -167,7 +174,7 @@ public partial class FullNotePage : ContentPage
         {
 			if (string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Header) &
 				string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Body))
-				return;
+                return base.OnBackButtonPressed();
 
             //file doesnt exist
             guid = Guid.NewGuid();
@@ -182,7 +189,33 @@ public partial class FullNotePage : ContentPage
             Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
         }
 
-		await Shell.Current.GoToAsync("..");
+		Shell.Current.GoToAsync("..");
+		return base.OnBackButtonPressed();
     }
 
+	protected override bool OnBackButtonPressed()
+	{
+		Guid guid = Guid.Empty;
+		string filename;
+
+		if (AppData.CurrentNoteModel.Id == Guid.Empty)
+		{
+			if (string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Header) &
+				string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Body))
+				return base.OnBackButtonPressed();
+
+			//file doesnt exist
+			guid = Guid.NewGuid();
+			AppData.CurrentNoteModel.Id = guid;
+			filename = guid.ToString();
+			Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
+			MainPage.OnNoteModelSaved.Invoke(AppData.CurrentNoteModel);
+		}
+		else
+		{
+			filename = AppData.CurrentNoteModel.Id.ToString();
+			Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
+		}
+		return base.OnBackButtonPressed();
+	}
 }

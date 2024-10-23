@@ -24,7 +24,7 @@
 		<ApplicationTitle>NTUA-Notes</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.ntuanotes</ApplicationId>
+		<ApplicationId>com.NTUA.Notes</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -39,12 +39,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
-
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
@@ -57,11 +51,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\AppIcon\appicon.png" />
 	  <None Remove="Resources\Images\deletedark.png" />
 	  <None Remove="Resources\Images\deletelight.png" />
 	  <None Remove="Resources\Images\editdark.png" />
 	  <None Remove="Resources\Images\editlight.png" />
+	  <None Remove="Resources\Images\icon.png" />
 	  <None Remove="Resources\Images\savelight.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiIcon Include="Resources\AppIcon\appicon.png" />
+	  <MauiSplashScreen Include="Resources\Splash\icon.png" />
 	</ItemGroup>
 
 	<ItemGroup>

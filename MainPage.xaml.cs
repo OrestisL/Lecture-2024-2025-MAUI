@@ -68,9 +68,10 @@ public partial class MainPage : ContentPage
         foreach (FileInfo file in fileInfos)
         {
             string fileName = file.Name;
-            Utilities.LoadDataFromJson<NoteViewModel>(fileName, out NoteViewModel noteViewModel);
-            NoteView noteView = new(noteViewModel);
-            NotesStackLayout.Children.Add(noteView);
+            if (!Utilities.LoadDataFromJson<NoteViewModel>(fileName, out NoteViewModel noteViewModel))
+                return;
+
+            NotesStackLayout.Children.Add(new NoteView(noteViewModel));
         }
     }
 
