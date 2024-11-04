@@ -189,7 +189,7 @@ public partial class FullNotePage : ContentPage
             Utilities.SaveDataToJson(filename, AppData.CurrentNoteModel);
         }
 
-		Shell.Current.GoToAsync("..");
+		Shell.Current.GoToAsync("..", true);
 		return base.OnBackButtonPressed();
     }
 
