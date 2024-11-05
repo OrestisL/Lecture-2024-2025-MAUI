@@ -53,7 +53,9 @@
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\appicon.png" />
 	  <None Remove="Resources\Images\deletedark.png" />
+	  <None Remove="Resources\Images\deletedarkfull.png" />
 	  <None Remove="Resources\Images\deletelight.png" />
+	  <None Remove="Resources\Images\deletelightfull.png" />
 	  <None Remove="Resources\Images\editdark.png" />
 	  <None Remove="Resources\Images\editlight.png" />
 	  <None Remove="Resources\Images\icon.png" />
@@ -66,6 +68,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

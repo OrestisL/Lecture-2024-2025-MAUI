@@ -77,7 +77,8 @@ public class NoteView : ContentView
         SwipeItem swipeDelete = new SwipeItem()
         {
             Text = "Delete",
-            BackgroundColor = Colors.LightPink,        
+            BackgroundColor = Colors.LightPink,      
+            
         };
 
         swipeDelete.SetAppTheme(SwipeItem.IconImageSourceProperty, "deletelight.png", "deletedark.png");

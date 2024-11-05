@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using Newtonsoft.Json;
 
 namespace Lecture_2024_2025_Notes.Utilities;
 
@@ -83,5 +85,14 @@ public static class Utilities
         data = JsonConvert.DeserializeObject<T>(json);
 
         return true;
+    }
+
+    public async static void ShowToast(string message, ToastDuration duration = ToastDuration.Short)
+    {
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        var toast = Toast.Make(message, duration);
+
+        await toast.Show(cancellationTokenSource.Token);
     }
 }

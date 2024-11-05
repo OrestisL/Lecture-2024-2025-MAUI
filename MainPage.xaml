@@ -43,9 +43,11 @@
             <Button
                 x:Name="AddNoteButton"
                 Grid.Column="2"
-                Text="Add"
+                Text="+"
                 Clicked="AddNoteButton_Clicked"
+                FontSize="50"
                 CornerRadius="50"
+                BackgroundColor="LightYellow"
                 ></Button>
         </Grid>
     </Grid>

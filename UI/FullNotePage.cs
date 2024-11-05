@@ -1,7 +1,7 @@
 using Lecture_2024_2025_Notes.Utilities;
 using NTUA_Notes.Models;
 using NTUA_Notes.Source;
-using System.Windows.Input;
+using CommunityToolkit.Maui.Alerts;
 
 namespace NTUA_Notes.UI;
 
@@ -18,6 +18,7 @@ public partial class FullNotePage : ContentPage
 	{
 		_viewModel = AppData.CurrentNoteModel;
 		Title = "Note";
+		
 		//Main page grid, will hold:
 		//First row: Header + edit + delete buttons
 		//Second row: date
@@ -26,7 +27,7 @@ public partial class FullNotePage : ContentPage
 		{
             RowDefinitions = 
 			[
-                new RowDefinition(new GridLength(60, GridUnitType.Absolute)),
+                new RowDefinition(new GridLength(50, GridUnitType.Absolute)),
                 new RowDefinition(new GridLength(30, GridUnitType.Absolute)),
                 new RowDefinition(new GridLength(1, GridUnitType.Star))
 			],
@@ -65,6 +66,7 @@ public partial class FullNotePage : ContentPage
         Button editButton = new Button()
         {
             BackgroundColor = Colors.Transparent,
+            IsEnabled = _viewModel.Body.Length > 0 || _viewModel.Header.Length > 0
         };
 		editButton.SetAppTheme(Button.ImageSourceProperty, "editlight.png", "editdark.png");
 		editButton.Clicked += EditButton_Clicked;
@@ -72,8 +74,9 @@ public partial class FullNotePage : ContentPage
 		Button deleteButton = new Button()
 		{
 			BackgroundColor = Colors.Transparent,
+			IsEnabled = _viewModel.Body.Length > 0 || _viewModel.Header.Length > 0
 		};
-		deleteButton.SetAppTheme(Button.ImageSourceProperty, "deletelight.png", "deletedark.png");
+		deleteButton.SetAppTheme(Button.ImageSourceProperty, "deletelightfull.png", "deletedarkfull.png");
         deleteButton.Clicked += DeleteButton_Clicked;
 
 		Button saveButton = new Button()
@@ -154,7 +157,7 @@ public partial class FullNotePage : ContentPage
 			return;
 
 		AppData.CurrentNoteModel.ToDelete = true;
-		await Shell.Current.GoToAsync("..");
+		await Shell.Current.GoToAsync("..", true);
     }
 
     private void EditButton_Clicked(object? sender, EventArgs e)
@@ -164,10 +167,17 @@ public partial class FullNotePage : ContentPage
 		_body.IsReadOnly = !_isEditMode;
     }
 
-	
-    private bool SaveNote()
-    {
-        Guid guid = Guid.Empty;
+
+	private bool SaveNote()
+	{
+		if (string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Header) &
+				string.IsNullOrWhiteSpace(AppData.CurrentNoteModel.Body))
+		{
+			Utilities.ShowToast("Cannot save empty note");
+			return false;
+		}
+
+            Guid guid = Guid.Empty;
         string filename;
 
         if (AppData.CurrentNoteModel.Id == Guid.Empty)
