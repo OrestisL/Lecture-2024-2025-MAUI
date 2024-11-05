@@ -15,7 +15,7 @@ public static class Utilities
             {
 #if WINDOWS
                 _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    "AppData", "LocalLow", "TUA_Notes.Data");
+                    "AppData", "LocalLow", "NTUA_Notes.Data");
 #elif ANDROID
                 _filePath = Path.Combine(FileSystem.AppDataDirectory, "ntuanotesdata");
 #endif
